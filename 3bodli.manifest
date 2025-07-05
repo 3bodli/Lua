@@ -1,0 +1,16 @@
+CACHE MANIFEST
+
+CACHE:
+index.html
+style.css
+img.jpg
+webkit.js
+kexploit.js
+ftp.bin
+goldhen_2.3.bin
+goldhen_2.4b18.3.bin
+int64.js
+rop.js
+
+NETWORK:
+*
