@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            padding: 50px;
+        }
+        .lock-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .lock-icon {
+            font-size: 50px;
+            color: #ff5722;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #hidden-content {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+        #used-passwords {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="lock-container">
+        <div class="lock-icon">🔒</div>
+        <h2>Test</h2>
+        <p>Enter password to go:</p>
+        
+        <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور المؤقتة">
+        <button onclick="checkPassword()">Enter</button>
+        
+        <p id="message" class="error"></p>
+        
+        <div id="used-passwords">
+            <h4>كلمات المرور المستخدمة:</h4>
+            <p id="used-list">لا توجد كلمات مستخدمة بعد</p>
+        </div>
+    </div>
+    
+    <div id="hidden-content">
+        <h2>Successfully!</h2>  
+        <button onclick="location.reload()">العودة إلى الصفحة الرئيسية</button>
+    </div>
+
+    <script>
+        // كلمات المرور المؤقتة (صالحة لمرة واحدة فقط)
+        let oneTimePasswords = [
+            "12345",
+            "123456",
+            "1234",
+            "123",
+            "12"
+        ];
+        
+        // كلمات المرور المستخدمة
+        let usedPasswords = JSON.parse(localStorage.getItem('usedPasswords')) || [];
+        
+        function checkPassword() {
+            const enteredPassword = document.getElementById("passwordInput").value;
+            const messageElement = document.getElementById("message");
+            const hiddenContent = document.getElementById("hidden-content");
+            const usedListElement = document.getElementById("used-list");
+            
+            // التحقق من أن الكلمة ليست مستخدمة من قبل
+            if (usedPasswords.includes(enteredPassword)) {
+                messageElement.textContent = "Password incorrect";
+                messageElement.className = "error";
+                return;
+            }
+            
+            // التحقق من أن الكلمة موجودة في قائمة الكلمات المؤقتة
+            if (oneTimePasswords.includes(enteredPassword)) {
+                // إضافة الكلمة إلى قائمة المستخدمة
+                usedPasswords.push(enteredPassword);
+                localStorage.setItem('usedPasswords', JSON.stringify(usedPasswords));
+                
+                // إزالة الكلمة من القائمة المؤقتة (اختياري)
+                oneTimePasswords = oneTimePasswords.filter(p => p !== enteredPassword);
+                
+                // عرض المحتوى
+                hiddenContent.style.display = "block";
+                document.querySelector(".lock-container").style.display = "none";
+                
+                // تحديث قائمة الكلمات المستخدمة
+                updateUsedPasswordsList();
+            } else {
+                messageElement.textContent = "Password incorrect";
+                messageElement.className = "error";
+            }
+        }
+        
+        function updateUsedPasswordsList() {
+            const usedListElement = document.getElementById("used-list");
+            if (usedPasswords.length > 0) {
+                usedListElement.innerHTML = usedPasswords.map(p => 
+                    `<span style="color:red; margin:0 5px;">${p}</span>`
+                ).join('');
+            } else {
+                usedListElement.textContent = "لا توجد كلمات مستخدمة بعد";
+            }
+        }
+        
+        // للسماح بالضغط على زر Enter عند إدخال كلمة المرور
+        document.getElementById("passwordInput").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                checkPassword();
+            }
+        });
+        
+        // عرض الكلمات المستخدمة عند تحميل الصفحة
+        updateUsedPasswordsList();
+    </script>
+</body>
+</html>
