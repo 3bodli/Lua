@@ -3,65 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام كلمات مرور مع Cookies</title>
-    <!-- نفس الـ Styles السابقة -->
+    <title>نظام كلمات مرور لمرة واحدة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            padding: 50px;
+        }
+        .lock-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .lock-icon {
+            font-size: 50px;
+            color: #ff5722;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #hidden-content {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+        #used-passwords {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-    <!-- نفس واجهة المستخدم السابقة -->
+    <div class="lock-container">
+        <div class="lock-icon">🔒</div>
+        <h2>نظام الدخول بكلمة مرور لمرة واحدة</h2>
+        <p>أدخل كلمة المرور المؤقتة للوصول إلى المحتوى:</p>
+        
+        <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور المؤقتة">
+        <button onclick="checkPassword()">الدخول</button>
+        
+        <p id="message" class="error"></p>
+        
+        <div id="used-passwords">
+            <h4>كلمات المرور المستخدمة:</h4>
+            <p id="used-list">لا توجد كلمات مستخدمة بعد</p>
+        </div>
+    </div>
+    
+    <div id="hidden-content">
+        <h2>مرحبًا بك!</h2>
+        <p>لقد تم فتح المحتوى بنجاح باستخدام كلمة مرور لمرة واحدة.</p>
+        <p>هذه الكلمة لن تعمل مرة أخرى.</p>
+        <button onclick="location.reload()">العودة إلى الصفحة الرئيسية</button>
+    </div>
 
     <script>
-        // كلمات المرور المؤقتة
-        let oneTimePasswords = ["1234", "567", "890"];
-        
+        // كلمات المرور المؤقتة (صالحة لمرة واحدة فقط)
+        let oneTimePasswords = [
+            "temp123",
+            "oneTime456",
+            "access789",
+            "singleUse",
+            "123temp"
+        ];
+
         // دالة لإنشاء Cookie
-        function setCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + (value || "") + expires + "; path=/";
-        }
-        
+        function setCookie(name, value, days) { let expires = ""; if (days) { const date = new Date(); date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); expires = "; expires=" + date.toUTCString(); } document.cookie = name + "=" + (value || "") + expires + "; path=/"; } 
         // دالة لقراءة Cookie
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for(let i=0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-        
+        function getCookie(name) { const nameEQ = name + "="; const ca = document.cookie.split(';'); for(let i=0; i < ca.length; i++) { let c = ca[i]; while (c.charAt(0) == ' ') c = c.substring(1, c.length); if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length); } return null; } 
         // دالة للحصول على الكلمات المستخدمة من Cookies
-        function getUsedPasswords() {
-            const used = getCookie("usedPasswords");
-            return used ? JSON.parse(used) : [];
-        }
+        function getUsedPasswords() { const used = getCookie("usedPasswords"); return used ? JSON.parse(used) : []; } function checkPassword() { const enteredPassword = document.getElementById("passwordInput").value; let usedPasswords = getUsedPasswords(); if (usedPasswords.includes(enteredPassword)) { document.getElementById("message").textContent = "هذه الكلمة مستخدمة مسبقًا"; return; } if (oneTimePasswords.includes(enteredPassword)) 
+        { 
+            // إضافة الكلمة إلى القائمة المستخدمة
+            usedPasswords.push(enteredPassword); setCookie("usedPasswords", JSON.stringify(usedPasswords), 30); 
+            // تنتهي بعد 30 يومًا
+            document.getElementById("hidden-content").style.display = "block"; document.querySelector(".lock-container").style.display = "none"; } else { document.getElementById("message").textContent = "كلمة المرور غير صحيحة"; } }
+        // كلمات المرور المستخدمة
+        let usedPasswords = JSON.parse(localStorage.getItem('usedPasswords')) || [];
         
         function checkPassword() {
             const enteredPassword = document.getElementById("passwordInput").value;
-            let usedPasswords = getUsedPasswords();
+            const messageElement = document.getElementById("message");
+            const hiddenContent = document.getElementById("hidden-content");
+            const usedListElement = document.getElementById("used-list");
             
+            // التحقق من أن الكلمة ليست مستخدمة من قبل
             if (usedPasswords.includes(enteredPassword)) {
-                document.getElementById("message").textContent = "هذه الكلمة مستخدمة مسبقًا";
+                messageElement.textContent = "هذه الكلمة مستخدمة مسبقًا ولم تعد صالحة";
+                messageElement.className = "error";
                 return;
             }
             
+            // التحقق من أن الكلمة موجودة في قائمة الكلمات المؤقتة
             if (oneTimePasswords.includes(enteredPassword)) {
-                // إضافة الكلمة إلى القائمة المستخدمة
+                // إضافة الكلمة إلى قائمة المستخدمة
                 usedPasswords.push(enteredPassword);
-                setCookie("usedPasswords", JSON.stringify(usedPasswords), 30); // تنتهي بعد 30 يومًا
+                localStorage.setItem('usedPasswords', JSON.stringify(usedPasswords));
                 
-                document.getElementById("hidden-content").style.display = "block";
+                // إزالة الكلمة من القائمة المؤقتة (اختياري)
+                oneTimePasswords = oneTimePasswords.filter(p => p !== enteredPassword);
+                
+                // عرض المحتوى
+                hiddenContent.style.display = "block";
                 document.querySelector(".lock-container").style.display = "none";
+                
+                // تحديث قائمة الكلمات المستخدمة
+                updateUsedPasswordsList();
             } else {
-                document.getElementById("message").textContent = "كلمة المرور غير صحيحة";
+                messageElement.textContent = "كلمة المرور غير صحيحة أو غير مسجلة";
+                messageElement.className = "error";
             }
         }
+        
+        function updateUsedPasswordsList() {
+            const usedListElement = document.getElementById("used-list");
+            if (usedPasswords.length > 0) {
+                usedListElement.innerHTML = usedPasswords.map(p => 
+                    `<span style="color:red; margin:0 5px;">${p}</span>`
+                ).join('');
+            } else {
+                usedListElement.textContent = "لا توجد كلمات مستخدمة بعد";
+            }
+        }
+        
+        // للسماح بالضغط على زر Enter عند إدخال كلمة المرور
+        document.getElementById("passwordInput").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                checkPassword();
+            }
+        });
+        
+        // عرض الكلمات المستخدمة عند تحميل الصفحة
+        updateUsedPasswordsList();
     </script>
 </body>
 </html>
