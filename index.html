@@ -91,13 +91,7 @@
 
     <script>
         // كلمات المرور المؤقتة (صالحة لمرة واحدة فقط)
-        let oneTimePasswords = [
-            "temp123",
-            "oneTime456",
-            "access789",
-            "singleUse",
-            "123temp"
-        ];
+        let oneTimePasswords = ["temp123", "oneTime456", "123456"];
 
         // دالة لإنشاء Cookie
         function setCookie(name, value, days) {
@@ -137,73 +131,16 @@
             }
             
             if (oneTimePasswords.includes(enteredPassword)) {
-            // إضافة الكلمة إلى القائمة المستخدمة
-            usedPasswords.push(enteredPassword);
-            setCookie("usedPasswords", JSON.stringify(usedPasswords), 30); //تنتهي بعد 30 يومًا
-                
-            document.getElementById("hidden-content").style.display = "block";
-            document.querySelector(".lock-container").style.display = "none";
-         } else {
-            document.getElementById("message").textContent = "كلمة المرور غير صحيحة";
-        }
-    }
-        // كلمات المرور المستخدمة
-        let usedPasswords = JSON.parse(localStorage.getItem('usedPasswords')) || [];
-        
-        function checkPassword() {
-            const enteredPassword = document.getElementById("passwordInput").value;
-            const messageElement = document.getElementById("message");
-            const hiddenContent = document.getElementById("hidden-content");
-            const usedListElement = document.getElementById("used-list");
-            
-            // التحقق من أن الكلمة ليست مستخدمة من قبل
-            if (usedPasswords.includes(enteredPassword)) {
-                messageElement.textContent = "هذه الكلمة مستخدمة مسبقًا ولم تعد صالحة";
-                messageElement.className = "error";
-                return;
-            }
-            
-            // التحقق من أن الكلمة موجودة في قائمة الكلمات المؤقتة
-            if (oneTimePasswords.includes(enteredPassword)) {
-                // إضافة الكلمة إلى قائمة المستخدمة
+                // إضافة الكلمة إلى القائمة المستخدمة
                 usedPasswords.push(enteredPassword);
-                localStorage.setItem('usedPasswords', JSON.stringify(usedPasswords));
+                setCookie("usedPasswords", JSON.stringify(usedPasswords), 30); //تنتهي بعد 30 يومًا
                 
-                // إزالة الكلمة من القائمة المؤقتة (اختياري)
-                oneTimePasswords = oneTimePasswords.filter(p => p !== enteredPassword);
-                
-                // عرض المحتوى
-                hiddenContent.style.display = "block";
+                document.getElementById("hidden-content").style.display = "block";
                 document.querySelector(".lock-container").style.display = "none";
-                
-                // تحديث قائمة الكلمات المستخدمة
-                updateUsedPasswordsList();
-            } else {
-                messageElement.textContent = "كلمة المرور غير صحيحة أو غير مسجلة";
-                messageElement.className = "error";
-            }
+             } else {
+                document.getElementById("message").textContent = "كلمة المرور غير صحيحة";
+             }
         }
-        
-        function updateUsedPasswordsList() {
-            const usedListElement = document.getElementById("used-list");
-            if (usedPasswords.length > 0) {
-                usedListElement.innerHTML = usedPasswords.map(p => 
-                    `<span style="color:red; margin:0 5px;">${p}</span>`
-                ).join('');
-            } else {
-                usedListElement.textContent = "لا توجد كلمات مستخدمة بعد";
-            }
-        }
-        
-        // للسماح بالضغط على زر Enter عند إدخال كلمة المرور
-        document.getElementById("passwordInput").addEventListener("keyup", function(event) {
-            if (event.key === "Enter") {
-                checkPassword();
-            }
-        });
-        
-        // عرض الكلمات المستخدمة عند تحميل الصفحة
-        updateUsedPasswordsList();
     </script>
 </body>
 </html>
