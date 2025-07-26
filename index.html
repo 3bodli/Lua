@@ -197,11 +197,11 @@
     <div class="container">
         <div class="lock-card">
             <div class="lock-icon">🔒</div>
-            <h1>This page were save by password</h1>
-            <p>Enter password to jailbreak</p>
+            <h1>This page were saved by password</h1>
+            <p>Please enter password to jailbreak</p>
             
             <div class="password-container">
-                <input type="password" id="passwordInput" placeholder="Password here">
+                <input type="password" id="passwordInput" placeholder="Place password here">
                 <div class="password-strength">
                     <div class="strength-bar" id="strengthBar"></div>
                 </div>
@@ -212,9 +212,14 @@
             <div id="message" class="message"></div>
             
             <button id="accessButton" class="access-btn" onclick="showContent()">
-                الدخول إلى المحتوى
+                Start
             </button>
-            
+       
+        <div class="footer">
+            Powered by @3bodli
+        </div>
+    </div>
+
     <script>
         // كلمات المرور الصحيحة
         const validPasswords = ["123456", "12345", "1234", "123"];
@@ -229,16 +234,16 @@
             const enteredPassword = passwordInput.value;
             
             if (enteredPassword === '') {
-                showMessage('Enter password', 'error');
+                showMessage('please enter correct password', 'error');
                 return;
             }
             
             if (validPasswords.includes(enteredPassword)) {
-                showMessage('Password correct! press button to jailbreak, 'success');
+                showMessage('Password is correct! press button to jailbreak', 'success');
                 accessButton.style.display = 'block';
                 passwordInput.value = '';
             } else {
-                showMessage('Password incorrect! please try another password, 'error');
+                showMessage('Password is incorrect! please try another password', 'error');
                 accessButton.style.display = 'none';
             }
         }
@@ -291,7 +296,7 @@
                         margin-top: 40px;
                         font-weight: bold;
                     ">
-                        Return to menu
+                        العودة إلى الصفحة الرئيسية
                     </button>
                 </div>
             `;
