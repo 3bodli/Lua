@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الدخول الآمن</title>
+    <title>OBADA HOSTS</title>
     <style>
         * {
             margin: 0;
@@ -197,32 +197,26 @@
     <div class="container">
         <div class="lock-card">
             <div class="lock-icon">🔒</div>
-            <h1>صفحة محمية بكلمة مرور</h1>
-            <p>الرجاء إدخال كلمة المرور الصحيحة لفتح المحتوى</p>
+            <h1>This page were save by password</h1>
+            <p>Enter password to jailbreak</p>
             
             <div class="password-container">
-                <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور هنا">
+                <input type="password" id="passwordInput" placeholder="Password here">
                 <div class="password-strength">
                     <div class="strength-bar" id="strengthBar"></div>
                 </div>
             </div>
             
-            <button class="submit-btn" onclick="checkPassword()">تحقق من كلمة المرور</button>
+            <button class="submit-btn" onclick="checkPassword()">Enter</button>
             
             <div id="message" class="message"></div>
             
-            <button id="accessButton" class="access-btn" onclick="showContent()">
-                الدخول إلى المحتوى
-            </button>
+            <a href="kernel/index.html"><button class="btn" onmouseover="msgs.innerHTML='Jailbreak'" onmouseout="msgs.innerHTML='OBADA HOSTS'"> Start </button></a>
        
-        <div class="footer">
-            نظام حماية &copy; 2023 | تم التطوير باستخدام HTML و CSS و JavaScript
-        </div>
-    </div>
 
     <script>
         // كلمات المرور الصحيحة
-        const validPasswords = ["123456", "secure", "access", "password"];
+        const validPasswords = ["123456", "12345", "1234", "123"];
         
         const passwordInput = document.getElementById('passwordInput');
         const messageDiv = document.getElementById('message');
@@ -234,16 +228,16 @@
             const enteredPassword = passwordInput.value;
             
             if (enteredPassword === '') {
-                showMessage('الرجاء إدخال كلمة المرور', 'error');
+                showMessage('Enter password', 'error');
                 return;
             }
             
             if (validPasswords.includes(enteredPassword)) {
-                showMessage('كلمة المرور صحيحة! انقر على الزر للدخول', 'success');
+                showMessage('Password correct! press button to jailbreak, 'success');
                 accessButton.style.display = 'block';
                 passwordInput.value = '';
             } else {
-                showMessage('كلمة المرور غير صحيحة. الرجاء المحاولة مرة أخرى', 'error');
+                showMessage('Password incorrect! please try another password, 'error');
                 accessButton.style.display = 'none';
             }
         }
@@ -296,7 +290,7 @@
                         margin-top: 40px;
                         font-weight: bold;
                     ">
-                        العودة إلى الصفحة الرئيسية
+                        Return to menu
                     </button>
                 </div>
             `;
