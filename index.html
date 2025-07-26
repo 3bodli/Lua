@@ -1,1 +1,340 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الدخول الآمن</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .lock-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .lock-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #ff5722;
+            text-shadow: 0 0 20px rgba(255, 87, 34, 0.7);
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #e0e0e0;
+        }
+        
+        .password-container {
+            position: relative;
+            margin: 25px 0;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: white;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            border-color: #ff5722;
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.5);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #ff5722, #ff9800);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 87, 34, 0.6);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .access-btn {
+            display: none;
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 22px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 30px auto;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        .access-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.7);
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            display: none;
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid #f44336;
+            display: block;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid #4CAF50;
+            display: block;
+        }
+        
+        .hint {
+            margin-top: 25px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .password-strength {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            background: #ff5722;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+        
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        @media (max-width: 600px) {
+            .lock-card {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            .lock-icon {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lock-card">
+            <div class="lock-icon">🔒</div>
+            <h1>صفحة محمية بكلمة مرور</h1>
+            <p>الرجاء إدخال كلمة المرور الصحيحة لفتح المحتوى</p>
+            
+            <div class="password-container">
+                <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور هنا">
+                <div class="password-strength">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+            </div>
+            
+            <button class="submit-btn" onclick="checkPassword()">تحقق من كلمة المرور</button>
+            
+            <div id="message" class="message"></div>
+            
+            <button id="accessButton" class="access-btn" onclick="showContent()">
+                الدخول إلى المحتوى
+            </button>
+       
+        <div class="footer">
+            نظام حماية &copy; 2023 | تم التطوير باستخدام HTML و CSS و JavaScript
+        </div>
+    </div>
 
+    <script>
+        // كلمات المرور الصحيحة
+        const validPasswords = ["123456", "secure", "access", "password"];
+        
+        const passwordInput = document.getElementById('passwordInput');
+        const messageDiv = document.getElementById('message');
+        const accessButton = document.getElementById('accessButton');
+        const strengthBar = document.getElementById('strengthBar');
+        
+        // التحقق من كلمة المرور
+        function checkPassword() {
+            const enteredPassword = passwordInput.value;
+            
+            if (enteredPassword === '') {
+                showMessage('الرجاء إدخال كلمة المرور', 'error');
+                return;
+            }
+            
+            if (validPasswords.includes(enteredPassword)) {
+                showMessage('كلمة المرور صحيحة! انقر على الزر للدخول', 'success');
+                accessButton.style.display = 'block';
+                passwordInput.value = '';
+            } else {
+                showMessage('كلمة المرور غير صحيحة. الرجاء المحاولة مرة أخرى', 'error');
+                accessButton.style.display = 'none';
+            }
+        }
+        
+        // عرض المحتوى
+        function showContent() {
+            document.body.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #0f9b0f, #3cba92);
+                    height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    text-align: center;
+                    padding: 20px;
+                ">
+                    <h1 style="font-size: 48px; margin-bottom: 30px;">مرحبًا بك في المحتوى الخاص!</h1>
+                    <div style="font-size: 24px; margin-bottom: 40px; max-width: 800px;">
+                        <p>لقد نجحت في الوصول إلى المحتوى المحمي.</p>
+                        <p>هذا هو المحتوى الحصري الذي يمكنك الوصول إليه فقط بعد إدخال كلمة المرور الصحيحة.</p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 800px;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                            <h2>المحتوى الأول</h2>
+                            <p>وصف للمحتوى الحصري الأول المتاح فقط للأعضاء المسجلين.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                            <h2>المحتوى الثاني</h2>
+                            <p>وصف للمحتوى الحصري الثاني المتاح فقط للأعضاء المسجلين.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                            <h2>المحتوى الثالث</h2>
+                            <p>وصف للمحتوى الحصري الثالث المتاح فقط للأعضاء المسجلين.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                            <h2>المحتوى الرابع</h2>
+                            <p>وصف للمحتوى الحصري الرابع المتاح فقط للأعضاء المسجلين.</p>
+                        </div>
+                    </div>
+                    <button onclick="location.reload()" style="
+                        background: white;
+                        color: #0f9b0f;
+                        border: none;
+                        padding: 15px 40px;
+                        font-size: 18px;
+                        border-radius: 50px;
+                        cursor: pointer;
+                        margin-top: 40px;
+                        font-weight: bold;
+                    ">
+                        العودة إلى الصفحة الرئيسية
+                    </button>
+                </div>
+            `;
+        }
+        
+        // عرض رسالة
+        function showMessage(msg, type) {
+            messageDiv.textContent = msg;
+            messageDiv.className = 'message ' + type;
+        }
+        
+        // للسماح بالضغط على زر Enter
+        passwordInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        });
+        
+        // مؤشر قوة كلمة المرور
+        passwordInput.addEventListener('input', function() {
+            const length = passwordInput.value.length;
+            let strength = 0;
+            
+            if (length > 0) strength = 25;
+            if (length > 4) strength = 50;
+            if (length > 8) strength = 75;
+            if (length > 12) strength = 100;
+            
+            strengthBar.style.width = strength + '%';
+            
+            if (strength < 50) {
+                strengthBar.style.background = '#ff5722';
+            } else if (strength < 75) {
+                strengthBar.style.background = '#ff9800';
+            } else {
+                strengthBar.style.background = '#4CAF50';
+            }
+        });
+    </script>
+</body>
+</html>
